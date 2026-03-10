@@ -2,11 +2,6 @@
 
 This repository contains the complete documentation, source code, and analysis for the AIT 203 Optimization course. This project applies advanced optimization techniques to address two distinct challenges: high-performance predictive regression modeling and constrained elastic cloud resource allocation.
 
-### Project Overview
-This AIT 203 project applies advanced optimization to two challenges: predictive demand modeling and resource allocation. We used the Normal Equation to model bike rentals, achieving a 40% $R^2$ boost via feature engineering. 
-
- Additionally, we used the Penalty Method to solve cloud VM allocation, balancing costs and energy efficiency. 
-
 ---
 
 ## Project 1: Bike Sharing Demand Prediction (Question 1)
@@ -15,12 +10,20 @@ This AIT 203 project applies advanced optimization to two challenges: predictive
 * **Technologies:** Python, NumPy, Matplotlib, Pandas
 
 ### Overview
-This question focused on predicting hourly bike rental counts by implementing regression models from scratch using the Normal Equation, ensuring a deep understanding of the underlying numerical optimization.
+This question focused on predicting hourly bike rental counts by implementing regression models from scratch using the Normal Equation, ensuring a deep understanding of the underlying numerical optimization without reliance on high-level libraries.
 
-### Key Contributions & Results
-* **Numerical Computation:** Modeled daily bike-sharing demand using large-scale Kaggle datasets and NumPy for high-performance vectorized numerical computation.
-* **Feature Engineering:** Refined predictive baseline accuracy by integrating higher-degree polynomials and complex interaction terms (e.g., `hour` × `workingday`, `temperature` × `humidity`) to capture non-linear usage patterns.
-* **Performance Gains:** Boosted model performance by 40% in $R^{2}$ score (from 0.7012 to 0.9134) and reduced Mean Squared Error (MSE) by 27%.
+### Methodology
+We modeled the relationship between features $X$ and target $y$ using $y = X\theta + \epsilon$. To find optimal weights, we derived the **Normal Equation**: $\theta = (X^{T}X)^{-1}X^{T}y$. Polynomial expansion $f(x) = \beta_0 + \beta_1 x + \dots$ and interaction terms were used to capture non-linear patterns.
+
+Models were evaluated using:
+* **Mean Squared Error (MSE):** Measures the average squared difference between estimates and actual values: $MSE = \frac{1}{n} \sum (y_i - \hat{y}_i)^2$.
+* **$R^{2}$ Score:** Explains the proportion of variance in the dependent variable: $R^2 = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2}$.
+
+### Implementation
+We performed data cleaning, one-hot encoding, and standardization. The weight vector $\theta$ was computed manually using NumPy’s linear algebra module to solve the system of equations.
+
+### Results
+Through iterative feature engineering, we boosted model performance by 40% in $R^{2}$ score (from 0.7012 to 0.9134) and reduced MSE by 27% compared to the baseline.
 
 ---
 
@@ -28,18 +31,22 @@ This question focused on predicting hourly bike rental counts by implementing re
 * **Topic:** Constrained Resource Allocation
 * **Technologies:** Python, NumPy, Matplotlib
 
-### Problem Definition
-This question required allocating heterogeneous Virtual Machine (VM) types to satisfy specific resource demands (CPU, memory, I/O) while minimizing operational costs and non-linear energy consumption.
+### Overview
+This question required allocating heterogeneous Virtual Machine (VM) types to satisfy specific resource demands while minimizing operational costs and non-linear energy consumption.
 
 ### Methodology
-We constructed a smooth, differentiable objective function:
-* **Nonlinear Energy Consumption:** Power-law scaling (exponent 1.4) to reflect CPU power dynamics.
-* **Integer-Promoting Regularizer:** Utilized $\lambda \sum (1 - \cos(2\pi x_j))$ to guide allocations toward integer values.
-* **Constraint Penalty:** A quadratic penalty function $P \sum \max(0, \text{shortfall})^2$ was applied to ensure hard resource demands were met.
+We minimized a differentiable objective $F(x) = C(x) + E(x) + R(x) + P(x)$, where:
+* **Cost:** $C(x) = \sum c_j x_j$ (Fixed costs).
+* **Energy:** $E(x) = \sum a_j x_j^{1.4}$ (Power-law scaling).
+* **Regularizer:** $R(x) = \lambda \sum (1 - \cos(2\pi x_j))$ (Integer-promoting).
+* **Penalty:** $P(x) = \frac{1}{2} \mu \sum (\max(0, d_i - \sum A_{ij} x_j))^2$ (Constraint enforcement).
 
-### Implementation & Results
-* **Algorithm:** Employed the **Penalty Method** with Gradient Descent.
-* **Convergence:** The solver reached a stable, feasible allocation where resource shortfalls were reduced to zero, successfully meeting the target demand vector $D = (50, 180, 15, 800, 40)$.
+
+### Implementation
+We employed the **Penalty Method** with Gradient Descent. The penalty parameter $\mu$ was iteratively increased to drive the solution toward global feasibility while maintaining differentiability.
+
+### Results
+The solver reached a stable, feasible allocation where resource shortfalls were reduced to zero, successfully meeting the target demand vector $D = (50, 180, 15, 800, 40)$.
 
 ---
 
@@ -47,7 +54,7 @@ We constructed a smooth, differentiable objective function:
 * `Optimization_Project_Q1_Notebook.ipynb`: Manual implementation of the normal equation and polynomial feature expansion.
 * `Optimization_Project_Q1_Report.pdf`: In-depth discussion on why interaction terms outperformed pure polynomial models.
 * `Optimization_Project_Q2_Notebook.ipynb`: Implementation of the Penalty Method for cloud resource allocation.
-* `Optimization_Project_Q2_Report.pdf`: Mathematical formulation of the energy-aware optimization model and final results interpretation.
+* `Optimization_Project_Q2_Report.pdf`: Mathematical formulation of the energy-aware optimization model and results interpretation.
 * `train.csv`: Original bike-sharing training dataset.
 
 ---
