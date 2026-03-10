@@ -5,7 +5,6 @@ This repository contains the complete documentation, source code, and analysis f
 ### Project Overview
 This AIT 203 project applies advanced optimization to two challenges: predictive demand modeling and resource allocation. We used the Normal Equation to model bike rentals, achieving a 40% $R^2$ boost via feature engineering. 
 
-[Image of polynomial regression curve]
  Additionally, we used the Penalty Method to solve cloud VM allocation, balancing costs and energy efficiency. 
 
 ---
